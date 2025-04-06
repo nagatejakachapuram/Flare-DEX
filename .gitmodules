@@ -4,3 +4,5 @@
 [submodule "foundry/lib/openzeppelin-contracts"]
 	path = foundry/lib/openzeppelin-contracts
 	url = https://github.com/openzeppelin/openzeppelin-contracts
+[submodule "foundry/lib/flare-smart-contracts-v2"]
+	path = foundry/lib/flare-smart-contracts-v2
