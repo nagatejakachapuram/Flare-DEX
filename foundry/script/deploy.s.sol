@@ -8,9 +8,9 @@ import {ContractRegistry} from "@flare-smart-contracts/ContractRegistry.sol";
 
 contract deploy is Script {
     bytes21[] public feedIds = [
-        bytes21(0x01464c522f55534400000000000000000000000000),
-        bytes21(0x014254432f55534400000000000000000000000000),
-        bytes21(0x014554482f55534400000000000000000000000000)
+        bytes21(0x01464c522f55534400000000000000000000000000), //FLR/USD
+        bytes21(0x014254432f55534400000000000000000000000000), //BTC/USD
+        bytes21(0x014554482f55534400000000000000000000000000)  //XRP/USD
     ];
 
     function run() external returns (FTSOOracle) {
