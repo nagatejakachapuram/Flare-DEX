@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.20;
+pragma solidity 0.8.19;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
@@ -141,8 +141,6 @@ contract DEXPool is ReentrancyGuard {
 
         ticks[lowerTick].liquidityGross -= liquidityDelta;
         ticks[upperTick].liquidityGross -= liquidityDelta;
-        ticks[lowerTick].liquidityNet -= int128(liquidityDelta);
-        ticks[upperTick].liquidityNet += int128(liquidityDelta);
 
         if (lowerTick <= currentTick && currentTick < upperTick) {
             liquidity -= liquidityDelta;
@@ -167,10 +165,8 @@ contract DEXPool is ReentrancyGuard {
         reserve0 -= amount0;
         reserve1 -= amount1;
 
-        require(
-            token0.transferFrom(msg.sender, address(this), amount0),
-            "TRANSFER_FROM_FAILED"
-        );
+        require(token0.transfer(msg.sender, amount0), "TRANSFER_FAILED");
+
         require(token1.transfer(msg.sender, amount1), "TRANSFER_FAILED");
 
         emit LiquidityRemoved(amount0, amount1);
