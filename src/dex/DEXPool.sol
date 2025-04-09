@@ -4,6 +4,7 @@ pragma solidity 0.8.19;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@uniswap/v3-periphery/contracts/libraries/LiquidityAmounts.sol";
+import "./FTSOOracle.sol";
 import {TickMath} from "v3-core/contracts/libraries/TickMath.sol";
 import {FullMath} from "v3-core/contracts/libraries/FullMath.sol";
 
@@ -34,6 +35,9 @@ contract DEXPool is ReentrancyGuard {
 
     /// @notice Total liquidity at the current active tick
     uint128 public liquidity;
+
+    IFTSOOracle public ftsoOracle;
+    string public pricePairSymbol; // E.g., "WC2FLR/C2FLR"
 
     /// @notice Structure to hold tick-level liquidity information
     /// @param liquidityNet Net liquidity change when crossing this tick
@@ -221,6 +225,28 @@ contract DEXPool is ReentrancyGuard {
 
         require(amountOut > 0, "Insufficient output");
         require(amountOut <= maxAmountOut, "Exceeds max output in range");
+
+        /// @notice ---------------- Oracle Price Validation ----------------- //
+        /// @notice Assume: feed index 0 = token0, feed index 1 = token1
+        (uint256 priceIn, int8 decimalsIn) = ftsoOracle.fetchPrice(
+            zeroForOne ? 0 : 1
+        );
+        (uint256 priceOut, int8 decimalsOut) = ftsoOracle.fetchPrice(
+            zeroForOne ? 1 : 0
+        );
+
+        require(decimalsIn >= 0 && decimalsOut >= 0, "Invalid decimals");
+
+        /// @notice Normalize to same precision (18 decimals)
+        uint256 valueInUSD = (amountIn *
+            priceIn *
+            (10 ** (18 - uint8(decimalsIn))));
+        uint256 valueOutUSD = (amountOut *
+            priceOut *
+            (10 ** (18 - uint8(decimalsOut))));
+
+        require(valueOutUSD <= valueInUSD, "Oracle price validation failed");
+        // ---------------------------------------------------------- // 
 
         if (zeroForOne) {
             reserve0 += amountIn;
