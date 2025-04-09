@@ -48,7 +48,8 @@ contract DEXFactory {
     /// @return pool The address of the newly created DEXPool
     function createPool(
         address _tokenA,
-        address _tokenB
+        address _tokenB,
+        address oracleAddress
     ) external returns (address pool) {
         require(_tokenA != _tokenB, "Identical tokens");
 
@@ -60,7 +61,7 @@ contract DEXFactory {
         require(getPool[token0][token1] == address(0), "Pool exists");
 
         // Deploy and store new DEX pool
-        DEXPool newPool = new DEXPool(token0, token1);
+        DEXPool newPool = new DEXPool(token0, token1, oracleAddress);
         pool = address(newPool);
 
         getPool[token0][token1] = pool;
