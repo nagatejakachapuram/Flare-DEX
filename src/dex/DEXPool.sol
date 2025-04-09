@@ -71,9 +71,10 @@ contract DEXPool is ReentrancyGuard {
     /// @notice Initializes the DEXPool contract with two ERC20 tokens
     /// @param _token0 Address of token0
     /// @param _token1 Address of token1
-    constructor(address _token0, address _token1) {
+    constructor(address _token0, address _token1,address _oracleAddress) {
         token0 = IERC20(_token0);
         token1 = IERC20(_token1);
+        ftsoOracle = IFTSOOracle(_oracleAddress);
 
         // Set initial sqrt price to 1.0 in Q64.96 format (i.e., 2^96)
         sqrtPriceX96 = 2 ** 96;
