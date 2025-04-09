@@ -10,6 +10,7 @@ contract TestDEXPool is Test {
     MockERC20 public token0;
     MockERC20 public token1;
     address public user;
+    FTSOOracle ftsoOracle;
 
     /// @dev Test setup
     function setUp() external {
@@ -24,7 +25,11 @@ contract TestDEXPool is Test {
         token1.mint(user, 10 ether);
 
         // Deploy pool
-        dexPool = new DEXPool(address(token0), address(token1));
+        dexPool = new DEXPool(
+            address(token0),
+            address(token1),
+            address(ftsoOracle)
+        );
 
         // Approve tokens to be used by the pool
         token0.approve(address(dexPool), type(uint256).max);
@@ -32,12 +37,12 @@ contract TestDEXPool is Test {
     }
 
     /// @dev Constructor parameter tests
-    function testTokenAddressesAreCorrect() public {
+    function testTokenAddressesAreCorrect() public view {
         assertEq(address(dexPool.token0()), address(token0));
         assertEq(address(dexPool.token1()), address(token1));
     }
 
-    function testInitialSqrtPriceX96IsCorrect() public {
+    function testInitialSqrtPriceX96IsCorrect() public view {
         uint160 expectedSqrtPrice = uint160(2 ** 96);
         assertEq(
             dexPool.sqrtPriceX96(),
@@ -46,7 +51,7 @@ contract TestDEXPool is Test {
         );
     }
 
-    function testInitialTickIsZero() public {
+    function testInitialTickIsZero() public view {
         int24 expectedTick = 0;
         assertEq(
             dexPool.currentTick(),
