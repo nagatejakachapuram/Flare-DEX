@@ -8,6 +8,8 @@ contract DeployDEXPool is Script {
     address constant FACTORY = 0x589a43d979dA679E9D8fc0fa72C31db81Cf91afC;
     address constant WC2FLR = 0xC67DCE33D7A8efA5FfEB961899C73fe01bCe9273;
     address constant testUSD = 0x6623C0BB56aDb150dC9C6BdB8682521354c2BF73;
+    address constant ETH = 0xf3187D2115171708fca10f1A11c522172d7Ec2d5;
+    address constant testXLM = 0xCf5B4553Ea9C20DebAb75EC0B735DF6315684285;
     address ftsoV2Address = 0xBF55AFB5d543db03f55852B02973B24345EAd1e1;
 
     function run() external {
