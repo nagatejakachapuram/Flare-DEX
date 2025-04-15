@@ -17,7 +17,6 @@ contract DEXFactory {
 
     /// @notice List of all deployed pools
     address[] public allPools;
-  
 
     /// @notice Emitted when a new liquidity pool is deployed
     /// @param token0 First token of the pair (sorted)
@@ -62,10 +61,10 @@ contract DEXFactory {
         require(getPool[token0][token1] == address(0), "Pool exists");
 
         // Deploy and store new DEX pool
-        getPool[token0][token1] = pool;
         DEXPool newPool = new DEXPool(token0, token1, oracleAddress);
         pool = address(newPool);
 
+        getPool[token0][token1] = pool;
         allPools.push(pool);
 
         emit PoolCreated(token0, token1, pool);
