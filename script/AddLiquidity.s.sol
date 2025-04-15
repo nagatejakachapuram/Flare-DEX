@@ -20,16 +20,15 @@ contract AddLiquidity is Script {
 
         DEXPool pool = DEXPool(POOL);
 
-        // Get token0 and token1 addresses
         address token0 = address(pool.token0());
         address token1 = address(pool.token1());
 
-        // Approve token0 and token1 to the pool
         IERC20(token0).approve(POOL, type(uint256).max);
         IERC20(token1).approve(POOL, type(uint256).max);
 
-        // Add liquidity
         pool.addLiquidity(LOWER_TICK, UPPER_TICK, LIQUIDITY);
+
+        console.log("Liquidity added to the pool.");
 
         vm.stopBroadcast();
     }
